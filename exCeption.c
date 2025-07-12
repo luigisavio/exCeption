@@ -23,14 +23,14 @@ typedef struct exc_exception{
 # Summary
     Function that creates a new exception. Allocates memory, writes to it and then returns pointer.
 # Inputs
-    exceptionId
+    ## exceptionId
         Numerical ID of the exception to be thrown.
-    funName
+    ## funName
         String containing the name of the function that is throwing the exception.
-    description
+    ## description
         String containg a human understandable description of what happened.
 # Outputs
-    return
+    ## return
         Pointer to new exception. 
 # Warnings    
     Allocates memory, so the returned exception must be freed later on!
@@ -52,12 +52,12 @@ exc_exception* exc_throw(int exceptionId, const char* funName, const char* descr
     pException->descriptionStrLen = strlen(description);
 
     // allocate memory for function name string
-    pException->pFunName = (char*) malloc(pException->funNameStrLen+1); // +1 for terminator char, do not call another time strlen for better performance
+    pException->pFunName = (char*) malloc((pException->funNameStrLen)+1); // +1 for terminator char, do not call another time strlen for better performance
     // write function name to allocated memory
     strcpy(pException->pFunName, funName); // $TODO check reutrn value
 
     // allocate memory for exception description string
-    pException->pDescription = (char*) malloc(pException->descriptionStrLen);
+    pException->pDescription = (char*) malloc((pException->descriptionStrLen)+1);
     // write to memory that was just allocated
     strcpy(pException->pDescription, description); // $TODO check reutrn value
 
@@ -76,11 +76,34 @@ char* exc_getExceptionDescription(const exc_exception* pException){
     return pException->pDescription;
 }
 
+exc_exception* exc_getParentException(const exc_exception* pException){
+    return pException->pParent;
+}
+
+exc_exception* exc_getChildException(const exc_exception* pException){
+    return pException->pChild;
+}
+
+exc_exception* exc_addThrow(exc_exception* pParentException, int exceptionId, const char* funName, const char* description){
+    // create new exception
+    exc_exception* pNewException = exc_throw(exceptionId, funName, description);
+
+    // link new exception to already existing exception
+    pNewException->pParent = pParentException;
+    pParentException->pChild = pNewException;
+
+    return pNewException;
+}
+
 void exc_freeException(exc_exception* pException){
-    if (pException->pChild == NULL){
+
+    // get parent exception
+    exc_exception* pParent = exc_getParentException(pException);
+
+    if (pParent == NULL){
         // this exception has no child, no need to free childs
     } else {
-        exc_freeException(pException->pChild); // free the child of this exception
+        exc_freeException(pParent); // free the parent of this exception
     }
     // free this exception
     free((void*)(pException->pFunName));
@@ -88,12 +111,32 @@ void exc_freeException(exc_exception* pException){
     free((void*)pException);
 }
 
+void exc_printException(const exc_exception* pException){
+
+    // get parent exception
+    exc_exception* pParent = exc_getParentException(pException);
+
+    if (pParent == NULL) {
+        // do nothing, no parent
+    } else {
+        // also print the parent
+        exc_printException(pParent);
+    }
+    // and always print this exception
+    printf("{ %i | %s | %s }\n",
+        exc_getExceptionId(pException),
+        exc_getExceptionFunName(pException),
+        exc_getExceptionDescription(pException));
+}
+
 int main(void){
     exc_exception* testExcp = exc_throw(34543, "yunfun", "funfun had some problems");
 
-    printf("ID: %i, funName: %s, description: %s \n", exc_getExceptionId(testExcp), exc_getExceptionFunName(testExcp), exc_getExceptionDescription(testExcp));
+    exc_exception* secondTestExcp = exc_addThrow(testExcp, 563, "halo", "bonjour");
 
-    exc_freeException(testExcp);
+    exc_printException(secondTestExcp);
+
+    exc_freeException(secondTestExcp);
 }
 
 
