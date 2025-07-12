@@ -4,7 +4,7 @@
 #include <stdio.h> 
 
 /*exception structure*/
-typedef struct exc_exception {
+typedef struct exc_exception{
 
     int exceptionId; // numerical identifier of the exception
 
@@ -35,7 +35,7 @@ typedef struct exc_exception {
 # Warnings    
     Allocates memory, so the returned exception must be freed later on!
 */
-exc_exception* exc_throw(int exceptionId, char* funName, char* description) {
+exc_exception* exc_throw(int exceptionId, const char* funName, const char* description){
 
     int sizeOfException = sizeof(exc_exception);
     int funNameStrLen = strlen(funName);
@@ -64,19 +64,19 @@ exc_exception* exc_throw(int exceptionId, char* funName, char* description) {
     return pException;
 }
 
-int exc_getExceptionId(exc_exception* pException){
+int exc_getExceptionId(const exc_exception* pException){
     return pException->exceptionId;
 }
 
-char* exc_getExceptionFunName(exc_exception* pException){
+char* exc_getExceptionFunName(const exc_exception* pException){
     return pException->pFunName;
 }
 
-char* exc_getExceptionDescription(exc_exception* pException){
+char* exc_getExceptionDescription(const exc_exception* pException){
     return pException->pDescription;
 }
 
-void exc_freeException(exc_exception* pException) {
+void exc_freeException(exc_exception* pException){
     if (pException->pChild == NULL){
         // this exception has no child, no need to free childs
     } else {
@@ -88,7 +88,7 @@ void exc_freeException(exc_exception* pException) {
     free((void*)pException);
 }
 
-int main(void) {
+int main(void){
     exc_exception* testExcp = exc_throw(34543, "yunfun", "funfun had some problems");
 
     printf("ID: %i, funName: %s, description: %s \n", exc_getExceptionId(testExcp), exc_getExceptionFunName(testExcp), exc_getExceptionDescription(testExcp));
