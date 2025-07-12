@@ -1,5 +1,5 @@
 #include <string.h>
-// $TODO check if all of these libraries are really needed
+// TODO check if all of these libraries are really needed
 #include <stdlib.h>
 #include <stdio.h> 
 
@@ -54,12 +54,12 @@ exc_exception* exc_throw(int exceptionId, const char* funName, const char* descr
     // allocate memory for function name string
     pException->pFunName = (char*) malloc((pException->funNameStrLen)+1); // +1 for terminator char, do not call another time strlen for better performance
     // write function name to allocated memory
-    strcpy(pException->pFunName, funName); // $TODO check reutrn value
+    strcpy(pException->pFunName, funName); // TODO check reutrn value
 
     // allocate memory for exception description string
     pException->pDescription = (char*) malloc((pException->descriptionStrLen)+1);
     // write to memory that was just allocated
-    strcpy(pException->pDescription, description); // $TODO check reutrn value
+    strcpy(pException->pDescription, description); // TODO check reutrn value
 
     return pException;
 }
@@ -113,6 +113,7 @@ void exc_freeException(exc_exception* pException){
 
 void exc_printException(const exc_exception* pException){
 
+    // TODO receive pointer to function used to print, to be more flexible
     // get parent exception
     exc_exception* pParent = exc_getParentException(pException);
 
