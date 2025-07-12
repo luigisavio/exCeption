@@ -4,12 +4,12 @@
 #include <stdio.h> 
 
 /*exception structure*/
-typedef struct exception {
+typedef struct exc_exception {
 
     int exceptionId; // numerical identifier of the exception
 
-    struct exception* pParent; // pointer to parent exception. Need to write struct since typedef has yet to happen
-    struct exception* pChild; // pointer to child exception. Need to write struct since typedef has yet to happen
+    struct exc_exception* pParent; // pointer to parent exception. Need to write struct since typedef has yet to happen
+    struct exc_exception* pChild; // pointer to child exception. Need to write struct since typedef has yet to happen
 
     char* pFunName; // pointer to first char of string that contains function name that threw this exception
     int funNameStrLen; // length of string function name (EXCLUDING terminator char)
@@ -17,7 +17,7 @@ typedef struct exception {
     char* pDescription; // pointer to first char of string that contains exception description
     int descriptionStrLen; // length of description string (EXCLUDING terminator char)
 
-} exception;
+} exc_exception;
 
 /* 
 # Summary
@@ -35,14 +35,14 @@ typedef struct exception {
 # Warnings    
     Allocates memory, so the returned exception must be freed later on!
 */
-exception* throw(int exceptionId, char* funName, char* description) {
+exc_exception* exc_throw(int exceptionId, char* funName, char* description) {
 
-    int sizeOfException = sizeof(exception);
+    int sizeOfException = sizeof(exc_exception);
     int funNameStrLen = strlen(funName);
     int descriptionStrLen = strlen(description);
 
     // allocate memory for main exception structure
-    exception* pException = (exception*) malloc(sizeOfException);
+    exc_exception* pException = (exc_exception*) malloc(sizeOfException);
 
     // write to memory that was just allocated, to populate the exception
     pException->exceptionId = exceptionId;
@@ -64,22 +64,36 @@ exception* throw(int exceptionId, char* funName, char* description) {
     return pException;
 }
 
-int getExceptionId(exception* pException){
+int exc_getExceptionId(exc_exception* pException){
     return pException->exceptionId;
 }
 
-char* getExceptionFunName(exception* pException){
+char* exc_getExceptionFunName(exc_exception* pException){
     return pException->pFunName;
 }
 
-char* getExceptionDescription(exception* pException){
+char* exc_getExceptionDescription(exc_exception* pException){
     return pException->pDescription;
 }
 
-int main(void) {
-    exception* testExcp = throw(34543, "yunfun", "funfun had some problems");
+void exc_freeException(exc_exception* pException) {
+    if (pException->pChild == NULL){
+        // this exception has no child, no need to free childs
+    } else {
+        exc_freeException(pException->pChild); // free the child of this exception
+    }
+    // free this exception
+    free((void*)(pException->pFunName));
+    free((void*)(pException->pDescription));
+    free((void*)pException);
+}
 
-    printf("ID: %i, funName: %s, description: %s \n", getExceptionId(testExcp), getExceptionFunName(testExcp), getExceptionDescription(testExcp));
+int main(void) {
+    exc_exception* testExcp = exc_throw(34543, "yunfun", "funfun had some problems");
+
+    printf("ID: %i, funName: %s, description: %s \n", exc_getExceptionId(testExcp), exc_getExceptionFunName(testExcp), exc_getExceptionDescription(testExcp));
+
+    exc_freeException(testExcp);
 }
 
 
