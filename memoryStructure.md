@@ -11,7 +11,7 @@ Each exception needs to have the following fields:
 This kind of structure is defined for each exception:
 | Name                        | Size            | Description                                                                                                                                   |
 | --------------------------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| Pointer to parent exception | Size of pointer | Pointer that points to the lower level exception. Null if there is no lower level exception.                                                  |
-| Pointer to child exception  | Size of pointer | Pointer that points to higher level exception. Null if there is no higher level exception.                                                    |
+| Pointer to parent exception | Size of pointer | Pointer that points to the lower level exception. NULL_POINTER if there is no lower level exception.                                                  |
+| Pointer to child exception  | Size of pointer | Pointer that points to higher level exception. NULL_POINTER if there is no higher level exception.                                                    |
 | Exception code              | 4 bytes         | Code that identifies the exception that happened in function N. May be used by higher level functions to identify the exception and handle it |
 | Exception string            | ?               | Describes in a human readable way the exception that happened.                                                                                |
