@@ -5,7 +5,7 @@
             "label": "buildWithMakefile",
             "command": "make",
             "options": {
-                "cwd": "${fileDirname}"
+                "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [
                 "$gcc"
