@@ -3,3 +3,4 @@ Implement the following public functions:
 - Function that generates the exception (origin).
 - Function that adds to an existing exception another exception (linked list on low level).
 - Function that reads the exception and frees the exceptions linked list.
+- Make debugger work with makefile.
