@@ -1,0 +1,21 @@
+{
+    "files.associations": {
+        "stdlib.h": "c",
+        "cstdlib": "c",
+        "exception.h": "c",
+        "stdio.h": "c"
+    },
+    "makefile.makefilePath": "",
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/luigi/dev/exCeption/bin",
+            "binaryPath": "/home/luigi/dev/exCeption/bin/exCeption",
+            "binaryArgs": []
+        },
+        {
+            "cwd": "/home/luigi/dev/exCeption/bin",
+            "binaryPath": "/home/luigi/dev/exCeption/bin/exCeptionTests",
+            "binaryArgs": []
+        }
+    ]
+}
