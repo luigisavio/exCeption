@@ -2,21 +2,9 @@
 // TODO check if all of these libraries are really needed
 #include <stdlib.h>
 #include <stdio.h>
+#include "exCeption.h"
 
 #define NULL_POINTER NULL // null pointer
-
-
-/*main exception structure*/
-typedef struct exc_root{
-
-    int exception_id; // numerical identifier of the exception
-
-    struct exc_root* p_parent; // pointer to parent exception. It is, if present, the exception that generated this exception. Otherwise it is null
-
-    char* fun_name; // string that contains function name that threw this exception
-    char* description; // string that conatins description of the exception: what happened?
-
-} exc_root;
 
 
 /*crates (memory allocation) and initializes a an exception root structure*/
