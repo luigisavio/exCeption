@@ -6,8 +6,6 @@
 
 #define NULL_POINTER NULL // null pointer
 
-
-
 exc_root* exc_create_root(){
 
     // allocate memory
