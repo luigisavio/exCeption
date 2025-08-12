@@ -2,7 +2,7 @@
     "tasks": [
         {
             "type": "shell",
-            "label": "Build",
+            "label": "buildWithMakefile",
             "command": "make",
             "options": {
                 "cwd": "${fileDirname}"

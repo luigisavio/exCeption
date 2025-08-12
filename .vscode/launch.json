@@ -2,13 +2,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(gdb) Launch",
+            "name": "my launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/final",
+            "program": "/home/luigi/dev/exCeption/bin/final",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${fileDirname}",
+            "cwd": "/home/luigi/dev/exCeption/bin",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
@@ -23,7 +23,8 @@
                     "text": "-gdb-set disassembly-flavor intel",
                     "ignoreFailures": true
                 }
-            ]
+            ],
+            "preLaunchTask":"buildWithMakefile"
         }
     ]
 }
