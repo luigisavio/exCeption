@@ -7,7 +7,7 @@
 #define NULL_POINTER NULL // null pointer
 
 
-/*crates (memory allocation) and initializes a an exception root structure*/
+
 exc_root* exc_create_root(){
 
     // allocate memory
@@ -22,7 +22,6 @@ exc_root* exc_create_root(){
     return p_exception;
 }
 
-/* Recoursive function that when called on an exception frees it and all its parent exceptions*/
 void exc_free(exc_root* p_exception){
 
     if (p_exception->p_parent == NULL_POINTER){
@@ -36,7 +35,6 @@ void exc_free(exc_root* p_exception){
     free((void*) p_exception);
 }
 
-/* Recoursive function that when called on an exception prints its child and it */
 void exc_print(const exc_root* p_exception){
 
     // TODO receive pointer to function used to print, to be more flexible
@@ -54,8 +52,6 @@ void exc_print(const exc_root* p_exception){
         p_exception->description);
 }
 
-
-/* Throws a new exception */
 exc_root* exc_throw(int exception_id, const char* fun_name, const char* description){
 
     // create new exception main structure
@@ -71,7 +67,6 @@ exc_root* exc_throw(int exception_id, const char* fun_name, const char* descript
     return p_exception;
 }
 
-/* Adds another exception to the input exception and returns the resulting exception */
 exc_root* exc_add_and_throw(exc_root* p_parent, int exception_id, const char* fun_name, const char* description){
     // create new exception
     exc_root* p_resulting_exception = exc_throw(exception_id, fun_name, description);
