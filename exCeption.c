@@ -14,8 +14,10 @@ exc_root* exc_create_root(){
     // initialize fields
     p_exception->exception_id = 0;
     p_exception->p_parent = NULL_POINTER;
-    p_exception->fun_name = NULL_POINTER;
-    p_exception->description= NULL_POINTER;
+    p_exception->fun_name.length = 0;
+    p_exception->fun_name.p_first_char = NULL_POINTER;
+    p_exception->description.length = 0;
+    p_exception->description.p_first_char = NULL_POINTER;
 
     return p_exception;
 }
@@ -28,8 +30,8 @@ void exc_free(exc_root* p_exception){
         exc_free(p_exception->p_parent); // free the parent of this exception
     }
     // free this exception. First free the strings, and only then the root
-    free((void*)(p_exception->fun_name));
-    free((void*)(p_exception->description));
+    free((void*)(p_exception->fun_name.p_first_char));
+    free((void*)(p_exception->description.p_first_char));
     free((void*) p_exception);
 }
 
@@ -46,8 +48,48 @@ void exc_print(const exc_root* p_exception){
     // and always print this exception
     printf("Error %i occurred in function %s: %s\n",
         p_exception->exception_id,
-        p_exception->fun_name,
-        p_exception->description);
+        p_exception->fun_name.p_first_char,
+        p_exception->description.p_first_char);
+}
+
+char* exc_to_str(const exc_root* p_exception){
+
+    // allocate memory for the strings. Allocated enough memory for the strings associated to this exception and all of its parents
+    int mem_to_allocate = exc_str_len(p_exception) + 1; // add one for terminator char
+    char* p_char_to_return = malloc(mem_to_allocate);
+
+    // write to allocated memory
+    exc_add_own_str_to_str(p_exception, p_char_to_return);
+
+    return p_char_to_return;
+}
+
+int exc_str_len(const exc_root* p_exception){
+
+    int this_exc_str_len = p_exception->fun_name.length + p_exception->description.length;
+
+    if (p_exception->p_parent == NULL_POINTER) {
+        // exception has no parent, return just the length of strings of this exception
+        return this_exc_str_len;
+    }else{
+        // exception has parent, return this exception strings length plus the parent exception (recoursive function)
+        return (this_exc_str_len + exc_str_len(p_exception->p_parent));
+    }
+}
+
+void exc_add_own_str_to_str(const exc_root* p_exception, char* p_first_char){
+
+    strcpy(p_first_char, p_exception->fun_name.p_first_char); // add function name string
+    strcpy(p_first_char + p_exception->fun_name.length, p_exception->description.p_first_char); // add description string, do not add one to destination: this way terminator char is overwritten
+
+    if (p_exception->p_parent == NULL_POINTER) {
+        // no parent exception, add terminator char and finish
+        strcpy(p_first_char + p_exception->fun_name.length + p_exception->description.length, "");
+        return;
+    }else{
+        // also add string of parent exception
+        exc_add_own_str_to_str(p_exception->p_parent, p_first_char + p_exception->fun_name.length + p_exception->description.length);
+    }
 }
 
 exc_root* exc_throw(int exception_id, const char* fun_name, const char* description){
@@ -57,10 +99,12 @@ exc_root* exc_throw(int exception_id, const char* fun_name, const char* descript
 
     // write to the new exception the input parameters
     p_exception->exception_id = exception_id;
-    p_exception->description = (char*) malloc(strlen(description)+1);
-    strcpy(p_exception->description, description);
-    p_exception->fun_name = (char*) malloc(strlen(fun_name)+1);
-    strcpy(p_exception->fun_name, fun_name);
+    p_exception->description.length = strlen(description);
+    p_exception->description.p_first_char = (char*) malloc(p_exception->description.length+1);
+    strcpy(p_exception->description.p_first_char, description);
+    p_exception->fun_name.length = strlen(fun_name);
+    p_exception->fun_name.p_first_char = (char*) malloc(p_exception->fun_name.length+1);
+    strcpy(p_exception->fun_name.p_first_char, fun_name);
 
     return p_exception;
 }

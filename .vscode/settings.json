@@ -3,7 +3,8 @@
         "stdlib.h": "c",
         "cstdlib": "c",
         "exception.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "string.h": "c"
     },
     "makefile.makefilePath": "",
     "makefile.launchConfigurations": [
