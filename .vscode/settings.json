@@ -16,6 +16,11 @@
             "cwd": "/home/luigi/dev/exCeption/bin",
             "binaryPath": "/home/luigi/dev/exCeption/bin/exCeptionTests",
             "binaryArgs": []
+        },
+        {
+            "cwd": "/home/luigi/dev/exCeption/bin",
+            "binaryPath": "/home/luigi/dev/exCeption/bin/final",
+            "binaryArgs": []
         }
     ]
 }
