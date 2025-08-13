@@ -11,7 +11,7 @@ const int STR_PART_ONE_SIZE = 16;
 const char* STR_PART_TWO = "\': ";
 const int STR_PART_TWO_SIZE = 3;
 const char* STR_PART_THREE = ".\n";
-const int STR_PART_THREE_SIZE = 2;
+const int STR_PART_THREE_SIZE = 2; // TODO consider moving these global definitions somewhere else
 
 exc_root* exc_create_root(){
 

@@ -6,3 +6,4 @@ Implement the following public functions:
 - Make debugger work with makefile.
 - Divide private and public functions.
 - Unit tests.
+- Function to string: receive optional input to automatically free the exception that is being converted to string.
