@@ -13,29 +13,29 @@ typedef struct exc_root{
     struct exc_root* p_parent; // pointer to parent exception. It is, if present, the exception that generated this exception. Otherwise it is null
 
     exc_string fun_name; // string that contains function name that threw this exception
-    exc_string description; // string that conatins description of the exception: what happened?
+    exc_string description; // string that contains description of the exception: what happened?
 
 } exc_root;
 
 /*crates (memory allocation) and initializes a an exception root structure*/
 exc_root* exc_create_root();
 
-/* Recoursive function that when called on an exception frees it and all its parent exceptions*/
+/* Recursive function that when called on an exception frees it and all its parent exceptions*/
 void exc_free(exc_root* p_exception);
 
-/* Recoursive function that when called on an exception prints its child and it */
+/* Recursive function that when called on an exception prints its child and it */
 void exc_print(const exc_root* p_exception);
 
 /* Throws a new exception */
 exc_root* exc_throw(int exception_id, const char* fun_name, const char* description);
 
-/* Allocates memory and returns pointer to string that rappresents exception */
+/* Allocates memory and returns pointer to string that represents exception */
 char* exc_to_str(const exc_root* p_exception);
 
 /* Returns the sum of the lengths of strings associated to an exception and all of its parents exceptions*/
 int exc_str_len(const exc_root* p_exception);
 
-/* Adds own strings to an already existion string */
+/* Adds own strings to an already existing string */
 void exc_add_own_str_to_str(const exc_root* p_exception, char* p_first_char);
 
 /* Adds another exception to the input exception and returns the resulting exception */

@@ -6,6 +6,13 @@
 
 #define NULL_POINTER NULL // null pointer
 
+const char* STR_PART_ONE = "-> In function \'";
+const int STR_PART_ONE_SIZE = 16;
+const char* STR_PART_TWO = "\': ";
+const int STR_PART_TWO_SIZE = 3;
+const char* STR_PART_THREE = ".\n";
+const int STR_PART_THREE_SIZE = 2;
+
 exc_root* exc_create_root(){
 
     // allocate memory
@@ -66,29 +73,40 @@ char* exc_to_str(const exc_root* p_exception){
 
 int exc_str_len(const exc_root* p_exception){
 
-    int this_exc_str_len = p_exception->fun_name.length + p_exception->description.length;
+    int this_exc_str_len = STR_PART_ONE_SIZE + p_exception->fun_name.length + STR_PART_TWO_SIZE + p_exception->description.length + STR_PART_THREE_SIZE;
 
     if (p_exception->p_parent == NULL_POINTER) {
         // exception has no parent, return just the length of strings of this exception
         return this_exc_str_len;
     }else{
-        // exception has parent, return this exception strings length plus the parent exception (recoursive function)
+        // exception has parent, return this exception strings length plus the parent exception (recursive function)
         return (this_exc_str_len + exc_str_len(p_exception->p_parent));
     }
 }
 
 void exc_add_own_str_to_str(const exc_root* p_exception, char* p_first_char){
 
-    strcpy(p_first_char, p_exception->fun_name.p_first_char); // add function name string
-    strcpy(p_first_char + p_exception->fun_name.length, p_exception->description.p_first_char); // add description string, do not add one to destination: this way terminator char is overwritten
+    // since strings are all known in size, use string copy instead of string cat. It is more efficient.
+
+    int tempOffset = 0;
+    strcpy(p_first_char, STR_PART_ONE);
+    tempOffset = STR_PART_ONE_SIZE;
+    strcpy(p_first_char + tempOffset, p_exception->fun_name.p_first_char); // add function name string
+    tempOffset += p_exception->fun_name.length;
+    strcpy(p_first_char + tempOffset, STR_PART_TWO);
+    tempOffset += STR_PART_TWO_SIZE;
+    strcpy(p_first_char + tempOffset, p_exception->description.p_first_char); // add description string
+    tempOffset += p_exception->description.length;
+    strcpy(p_first_char + tempOffset, STR_PART_THREE);
+    tempOffset += STR_PART_THREE_SIZE;
 
     if (p_exception->p_parent == NULL_POINTER) {
         // no parent exception, add terminator char and finish
-        strcpy(p_first_char + p_exception->fun_name.length + p_exception->description.length, "");
+        strcpy(p_first_char + tempOffset, "");
         return;
     }else{
         // also add string of parent exception
-        exc_add_own_str_to_str(p_exception->p_parent, p_first_char + p_exception->fun_name.length + p_exception->description.length);
+        exc_add_own_str_to_str(p_exception->p_parent, p_first_char + tempOffset);
     }
 }
 
