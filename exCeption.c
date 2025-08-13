@@ -15,6 +15,8 @@ const int STR_PART_TWO_SIZE = 3;
 const char* STR_PART_THREE = ".\n";
 const int STR_PART_THREE_SIZE = 2; // TODO consider moving these global definitions somewhere else
 
+/* # Public functions */
+
 exc_root* exc_create_root(){
 
     // allocate memory
@@ -75,6 +77,35 @@ char* exc_to_str(const exc_root* p_exception){
     return p_char_to_return;
 }
 
+exc_root* exc_throw(int exception_id, const char* fun_name, const char* description){
+
+    // create new exception main structure
+    exc_root* p_exception = exc_create_root();
+
+    // write to the new exception the input parameters
+    p_exception->exception_id = exception_id;
+    p_exception->description.length = strlen(description);
+    p_exception->description.p_first_char = (char*) malloc(p_exception->description.length+1);
+    strcpy(p_exception->description.p_first_char, description);
+    p_exception->fun_name.length = strlen(fun_name);
+    p_exception->fun_name.p_first_char = (char*) malloc(p_exception->fun_name.length+1);
+    strcpy(p_exception->fun_name.p_first_char, fun_name);
+
+    return p_exception;
+}
+
+exc_root* exc_add_and_throw(exc_root* p_parent, int exception_id, const char* fun_name, const char* description){
+    // create new exception
+    exc_root* p_resulting_exception = exc_throw(exception_id, fun_name, description);
+
+    // link new exception to already existing exception
+    p_resulting_exception->p_parent = p_parent;
+
+    return p_resulting_exception;
+}
+
+/* # Private functions */
+
 int exc_str_len(const exc_root* p_exception){
 
     int this_exc_str_len = STR_PART_ONE_SIZE + p_exception->fun_name.length + STR_PART_TWO_SIZE + p_exception->description.length + STR_PART_THREE_SIZE;
@@ -112,33 +143,6 @@ void exc_add_own_str_to_str(const exc_root* p_exception, char* p_first_char){
         // also add string of parent exception
         exc_add_own_str_to_str(p_exception->p_parent, p_first_char + tempOffset);
     }
-}
-
-exc_root* exc_throw(int exception_id, const char* fun_name, const char* description){
-
-    // create new exception main structure
-    exc_root* p_exception = exc_create_root();
-
-    // write to the new exception the input parameters
-    p_exception->exception_id = exception_id;
-    p_exception->description.length = strlen(description);
-    p_exception->description.p_first_char = (char*) malloc(p_exception->description.length+1);
-    strcpy(p_exception->description.p_first_char, description);
-    p_exception->fun_name.length = strlen(fun_name);
-    p_exception->fun_name.p_first_char = (char*) malloc(p_exception->fun_name.length+1);
-    strcpy(p_exception->fun_name.p_first_char, fun_name);
-
-    return p_exception;
-}
-
-exc_root* exc_add_and_throw(exc_root* p_parent, int exception_id, const char* fun_name, const char* description){
-    // create new exception
-    exc_root* p_resulting_exception = exc_throw(exception_id, fun_name, description);
-
-    // link new exception to already existing exception
-    p_resulting_exception->p_parent = p_parent;
-
-    return p_resulting_exception;
 }
 
 
