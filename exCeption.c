@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include "exCeption.h" // "" so the preprocessor looks first in the directories relative to this project
 
-#define NULL_POINTER NULL
-
 const char* STR_PART_ZERO = "An exception occurred, trace:\n";
 const int STR_PART_ZERO_SIZE = 30;
 const char* STR_PART_ONE = "-> In function \'";
@@ -23,19 +21,19 @@ exc_root* exc_create_root(void){
     exc_root* p_exception = (exc_root*) malloc(sizeof(exc_root));
 
     // initialize fields
-    p_exception->exception_id = 0;
-    p_exception->p_parent = NULL_POINTER;
+    p_exception->exception_id = EXC_NONE_ID;
+    p_exception->p_parent = EXC_NULL_POINTER;
     p_exception->fun_name.length = 0;
-    p_exception->fun_name.p_first_char = NULL_POINTER;
+    p_exception->fun_name.p_first_char = EXC_NULL_POINTER;
     p_exception->description.length = 0;
-    p_exception->description.p_first_char = NULL_POINTER;
+    p_exception->description.p_first_char = EXC_NULL_POINTER;
 
     return p_exception;
 }
 
 void exc_free(exc_root* p_exception){
 
-    if (p_exception->p_parent == NULL_POINTER){
+    if (p_exception->p_parent == EXC_NULL_POINTER){
         // this exception has no child, no need to free childs
     } else {
         exc_free(p_exception->p_parent); // free the parent of this exception
@@ -49,18 +47,10 @@ void exc_free(exc_root* p_exception){
 void exc_print(const exc_root* p_exception){
 
     // TODO receive pointer to function used to print, to be more flexible
-    // get parent exception
 
-    // if the exception has a parent, also print the parent
-    if (p_exception->p_parent != NULL_POINTER) {
-        exc_print(p_exception->p_parent);
-    }
-
-    // and always print this exception
-    printf("Error %i occurred in function %s: %s\n",
-        p_exception->exception_id,
-        p_exception->fun_name.p_first_char,
-        p_exception->description.p_first_char);
+    char* stringToPrint = exc_to_str(p_exception);
+    printf("%s", stringToPrint);
+    free(stringToPrint);
 }
 
 char* exc_to_str(const exc_root* p_exception){
@@ -104,13 +94,17 @@ exc_root* exc_add_and_throw(exc_root* p_parent, int exception_id, const char* fu
     return p_resulting_exception;
 }
 
+int exc_catch(const exc_root* p_exception){
+    return p_exception->exception_id;
+}
+
 /* # Private functions */
 
 int exc_str_len(const exc_root* p_exception){
 
     int this_exc_str_len = STR_PART_ONE_SIZE + p_exception->fun_name.length + STR_PART_TWO_SIZE + p_exception->description.length + STR_PART_THREE_SIZE;
 
-    if (p_exception->p_parent == NULL_POINTER) {
+    if (p_exception->p_parent == EXC_NULL_POINTER) {
         // exception has no parent, return just the length of strings of this exception
         return this_exc_str_len;
     }else{
@@ -135,7 +129,7 @@ void exc_add_own_str_to_str(const exc_root* p_exception, char* p_first_char){
     strcpy(p_first_char + tempOffset, STR_PART_THREE);
     tempOffset += STR_PART_THREE_SIZE;
 
-    if (p_exception->p_parent == NULL_POINTER) {
+    if (p_exception->p_parent == EXC_NULL_POINTER) {
         // no parent exception, add terminator char and finish
         strcpy(p_first_char + tempOffset, "");
         return;
