@@ -18,7 +18,7 @@ typedef struct exc_root{
 } exc_root;
 
 /*crates (memory allocation) and initializes a an exception root structure*/
-exc_root* exc_create_root();
+exc_root* exc_create_root(void);
 
 /* Recursive function that when called on an exception frees it and all its parent exceptions*/
 void exc_free(exc_root* p_exception);

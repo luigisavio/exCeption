@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "exCeption.h" // "" so the preprocessor looks first in the directories relative to this project
 
-#define NULL_POINTER NULL // null pointer
+#define NULL_POINTER NULL
 
 const char* STR_PART_ZERO = "An exception occurred, trace:\n";
 const int STR_PART_ZERO_SIZE = 30;
@@ -17,7 +17,7 @@ const int STR_PART_THREE_SIZE = 2; // TODO consider moving these global definiti
 
 /* # Public functions */
 
-exc_root* exc_create_root(){
+exc_root* exc_create_root(void){
 
     // allocate memory
     exc_root* p_exception = (exc_root*) malloc(sizeof(exc_root));
