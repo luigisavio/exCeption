@@ -16,7 +16,7 @@ exc_root* sumOfPositiveNumbers(int a, int b, int* c){
     }
     
 }
-
+// TODO try better ways to handle exceptions
 exc_root* averageOfNumbers(int a, int b, int* c){
 
     int result;

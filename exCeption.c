@@ -55,6 +55,8 @@ void exc_print(const exc_root* p_exception){
 
 char* exc_to_str(const exc_root* p_exception){
 
+    // TODO check received exception pointer is not null
+    
     // allocate memory for the strings. Allocated enough memory for the strings associated to this exception and all of its parents
     int mem_to_allocate = STR_PART_ZERO_SIZE + exc_str_len(p_exception) + 1; // add one for terminator char
     char* p_char_to_return = malloc(mem_to_allocate);
