@@ -7,3 +7,4 @@ Implement the following public functions:
 - Divide private and public functions.
 - Unit tests.
 - Function to string: receive optional input to automatically free the exception that is being converted to string.
+- Add separate header file for private functions. This way they cannot be accessed if the main header file is included.

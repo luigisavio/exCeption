@@ -6,6 +6,8 @@
 
 #define NULL_POINTER NULL // null pointer
 
+const char* STR_PART_ZERO = "An exception occurred, trace:\n";
+const int STR_PART_ZERO_SIZE = 30;
 const char* STR_PART_ONE = "-> In function \'";
 const int STR_PART_ONE_SIZE = 16;
 const char* STR_PART_TWO = "\': ";
@@ -62,11 +64,13 @@ void exc_print(const exc_root* p_exception){
 char* exc_to_str(const exc_root* p_exception){
 
     // allocate memory for the strings. Allocated enough memory for the strings associated to this exception and all of its parents
-    int mem_to_allocate = exc_str_len(p_exception) + 1; // add one for terminator char
+    int mem_to_allocate = STR_PART_ZERO_SIZE + exc_str_len(p_exception) + 1; // add one for terminator char
     char* p_char_to_return = malloc(mem_to_allocate);
 
-    // write to allocated memory
-    exc_add_own_str_to_str(p_exception, p_char_to_return);
+    // start by adding the introduction to exception
+    strcpy(p_char_to_return, STR_PART_ZERO);
+    // and then add the actual exception strings
+    exc_add_own_str_to_str(p_exception, p_char_to_return + STR_PART_ZERO_SIZE);
 
     return p_char_to_return;
 }
