@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 /* Declare some functions */
-exc_root* sumOfPositiveNumbers(int a, int b, int* c){
+exc sumOfPositiveNumbers(int a, int b, int* c){
 
     if (a<=0) {
         return exc_throw(1, "sumOfPositiveNumbers", "a is negative");
@@ -17,11 +17,11 @@ exc_root* sumOfPositiveNumbers(int a, int b, int* c){
     
 }
 
-exc_root* averageOfNumbers(int a, int b, int* c){
+exc averageOfNumbers(int a, int b, int* c){
 
     int result;
 
-    exc_root* exception = sumOfPositiveNumbers(a, b, &result);
+    exc exception = sumOfPositiveNumbers(a, b, &result);
 
     if (exception != EXC_NONE) {
         return exc_add_and_throw(exception, 1, "averageOfNumbers", "error in sum function");
@@ -32,7 +32,7 @@ exc_root* averageOfNumbers(int a, int b, int* c){
     return EXC_NONE;
 }
 
-int sumOfPositiveNumbers2(int a, int b, exc_root** exc){
+int sumOfPositiveNumbers2(int a, int b, exc* exc){
 
     if (a<=0) {
         *exc = exc_throw(1, "sumOfPositiveNumbers2", "a is negative");
@@ -48,7 +48,7 @@ int sumOfPositiveNumbers2(int a, int b, exc_root** exc){
     
 }
 
-int averageOfNumbers2(int a, int b, exc_root** exc){
+int averageOfNumbers2(int a, int b, exc* exc){
 
     int sum = sumOfPositiveNumbers2(a, b, exc);
 
@@ -63,7 +63,7 @@ int averageOfNumbers2(int a, int b, exc_root** exc){
 int main(void){
     
     int c;
-    exc_root* exception = averageOfNumbers(-1, 1, &c);
+    exc exception = averageOfNumbers(-1, 1, &c);
 
     exc_print(exception);
 
