@@ -70,6 +70,7 @@ int main(void){
     exc_free(exception);
 
     c = averageOfNumbers2(1, -1, &exception);
+    
     exc_print(exception);
 
     exc_free(exception);
