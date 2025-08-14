@@ -23,23 +23,26 @@ typedef struct exc_root{
 
 } exc_root;
 
+/* For clarity, define a data type that is just a pointer to an exception structure */
+typedef exc_root* exc;
+
 /* Recursive function that when called on an exception frees it and all its parent exceptions*/
-void exc_free(exc_root* p_exception);
+void exc_free(exc p_exception);
 
 /* Recursive function that when called on an exception prints its child and it */
-void exc_print(const exc_root* p_exception);
+void exc_print(const exc p_exception);
 
 /* Throws a new exception */
-exc_root* exc_throw(int exception_id, const char* fun_name, const char* description);
+exc exc_throw(int exception_id, const char* fun_name, const char* description);
 
 /* Allocates memory and returns pointer to string that represents exception */
-char* exc_to_str(const exc_root* p_exception);
+char* exc_to_str(const exc p_exception);
 
 /* Adds another exception to the input exception and returns the resulting exception */
-exc_root* exc_add_and_throw(exc_root* p_parent, int exception_id, const char* fun_name, const char* description);
+exc exc_add_and_throw(exc p_parent, int exception_id, const char* fun_name, const char* description);
 
 /* Returns the ID of the exception */
-int exc_catch(const exc_root* p_exception);
+int exc_catch(const exc p_exception);
 
 /* # Private functions */
 

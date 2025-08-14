@@ -15,7 +15,7 @@ const int STR_PART_THREE_SIZE = 2; // TODO consider moving these global definiti
 
 /* # Public functions */
 
-void exc_free(exc_root* p_exception){
+void exc_free(exc p_exception){
 
     if (p_exception->p_parent == EXC_NULL_POINTER){
         // this exception has no child, no need to free childs
@@ -28,7 +28,7 @@ void exc_free(exc_root* p_exception){
     free((void*) p_exception);
 }
 
-void exc_print(const exc_root* p_exception){
+void exc_print(const exc p_exception){
 
     // TODO receive pointer to function used to print, to be more flexible
 
@@ -37,7 +37,7 @@ void exc_print(const exc_root* p_exception){
     free(stringToPrint);
 }
 
-char* exc_to_str(const exc_root* p_exception){
+char* exc_to_str(const exc p_exception){
 
     // TODO check received exception pointer is not null
     
@@ -53,7 +53,7 @@ char* exc_to_str(const exc_root* p_exception){
     return p_char_to_return;
 }
 
-exc_root* exc_throw(int exception_id, const char* fun_name, const char* description){
+exc exc_throw(int exception_id, const char* fun_name, const char* description){
 
     // create new exception main structure
     exc_root* p_exception = exc_create_root();
@@ -70,7 +70,7 @@ exc_root* exc_throw(int exception_id, const char* fun_name, const char* descript
     return p_exception;
 }
 
-exc_root* exc_add_and_throw(exc_root* p_parent, int exception_id, const char* fun_name, const char* description){
+exc exc_add_and_throw(exc p_parent, int exception_id, const char* fun_name, const char* description){
     // create new exception
     exc_root* p_resulting_exception = exc_throw(exception_id, fun_name, description);
 
@@ -80,7 +80,7 @@ exc_root* exc_add_and_throw(exc_root* p_parent, int exception_id, const char* fu
     return p_resulting_exception;
 }
 
-int exc_catch(const exc_root* p_exception){
+int exc_catch(const exc p_exception){
     return p_exception->exception_id;
 }
 
