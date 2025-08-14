@@ -15,22 +15,6 @@ const int STR_PART_THREE_SIZE = 2; // TODO consider moving these global definiti
 
 /* # Public functions */
 
-exc_root* exc_create_root(void){
-
-    // allocate memory
-    exc_root* p_exception = (exc_root*) malloc(sizeof(exc_root));
-
-    // initialize fields
-    p_exception->exception_id = EXC_NONE_ID;
-    p_exception->p_parent = EXC_NULL_POINTER;
-    p_exception->fun_name.length = 0;
-    p_exception->fun_name.p_first_char = EXC_NULL_POINTER;
-    p_exception->description.length = 0;
-    p_exception->description.p_first_char = EXC_NULL_POINTER;
-
-    return p_exception;
-}
-
 void exc_free(exc_root* p_exception){
 
     if (p_exception->p_parent == EXC_NULL_POINTER){
@@ -101,6 +85,22 @@ int exc_catch(const exc_root* p_exception){
 }
 
 /* # Private functions */
+
+exc_root* exc_create_root(void){
+
+    // allocate memory
+    exc_root* p_exception = (exc_root*) malloc(sizeof(exc_root));
+
+    // initialize fields
+    p_exception->exception_id = EXC_NONE_ID;
+    p_exception->p_parent = EXC_NULL_POINTER;
+    p_exception->fun_name.length = 0;
+    p_exception->fun_name.p_first_char = EXC_NULL_POINTER;
+    p_exception->description.length = 0;
+    p_exception->description.p_first_char = EXC_NULL_POINTER;
+
+    return p_exception;
+}
 
 int exc_str_len(const exc_root* p_exception){
 

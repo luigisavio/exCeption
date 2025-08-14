@@ -23,9 +23,6 @@ typedef struct exc_root{
 
 } exc_root;
 
-/*crates (memory allocation) and initializes a an exception root structure*/
-exc_root* exc_create_root(void);
-
 /* Recursive function that when called on an exception frees it and all its parent exceptions*/
 void exc_free(exc_root* p_exception);
 
@@ -45,6 +42,9 @@ exc_root* exc_add_and_throw(exc_root* p_parent, int exception_id, const char* fu
 int exc_catch(const exc_root* p_exception);
 
 /* # Private functions */
+
+/*crates (memory allocation) and initializes a an exception root structure*/
+exc_root* exc_create_root(void);
 
 /* Returns the sum of the lengths of strings associated to an exception and all of its parents exceptions*/
 int exc_str_len(const exc_root* p_exception);
