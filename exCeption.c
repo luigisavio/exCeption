@@ -17,6 +17,10 @@ const int STR_PART_THREE_SIZE = 2; // TODO consider moving these global definiti
 
 void exc_free(exc p_exception){
 
+    if(p_exception == EXC_NULL_POINTER){
+        return; // nothing to free
+    }
+
     if (p_exception->p_parent == EXC_NULL_POINTER){
         // this exception has no child, no need to free childs
     } else {
@@ -32,6 +36,10 @@ void exc_print(const exc p_exception){
 
     // TODO receive pointer to function used to print, to be more flexible
 
+    if(p_exception == EXC_NULL_POINTER){
+        return; // nothing to free
+    }
+
     char* stringToPrint = exc_to_str(p_exception);
     printf("%s", stringToPrint);
     free(stringToPrint);
@@ -39,19 +47,27 @@ void exc_print(const exc p_exception){
 
 char* exc_to_str(const exc p_exception){
 
-    // TODO check received exception pointer is not null
+    if(p_exception == EXC_NULL_POINTER){
+        return EXC_NULL_POINTER; // nothing to free
+    }
     
     // allocate memory for the strings. Allocated enough memory for the strings associated to this exception and all of its parents
     int mem_to_allocate = STR_PART_ZERO_SIZE + exc_str_len(p_exception) + 1; // add one for terminator char
-    char* p_char_to_return = malloc(mem_to_allocate);
+    char* p_char_to_return = (char*)malloc(mem_to_allocate);
 
-    // start by adding the introduction to exception
-    strcpy(p_char_to_return, STR_PART_ZERO);
-    // and then add the actual exception strings
-    exc_add_own_str_to_str(p_exception, p_char_to_return + STR_PART_ZERO_SIZE);
+    if(p_char_to_return == EXC_NULL_POINTER){
+        return EXC_NULL_POINTER; // memory allocation failed
+    }else{
+        // start by adding the introduction to exception
+        strcpy(p_char_to_return, STR_PART_ZERO);
+        // and then add the actual exception strings
+        exc_add_own_str_to_str(p_exception, p_char_to_return + STR_PART_ZERO_SIZE);
 
-    return p_char_to_return;
+        return p_char_to_return;
+    }
 }
+
+    
 
 exc exc_throw(int exception_id, const char* fun_name, const char* description){
 
@@ -62,22 +78,33 @@ exc exc_throw(int exception_id, const char* fun_name, const char* description){
     p_exception->exception_id = exception_id;
     p_exception->description.length = strlen(description);
     p_exception->description.p_first_char = (char*) malloc(p_exception->description.length+1);
-    strcpy(p_exception->description.p_first_char, description);
-    p_exception->fun_name.length = strlen(fun_name);
     p_exception->fun_name.p_first_char = (char*) malloc(p_exception->fun_name.length+1);
-    strcpy(p_exception->fun_name.p_first_char, fun_name);
 
-    return p_exception;
+    if ( (p_exception->description.p_first_char == EXC_NULL_POINTER) || (p_exception->fun_name.p_first_char == EXC_NULL_POINTER) ){
+        // memory allocation failed, free everything and return null pointer
+        exc_free(p_exception);
+        return EXC_NULL_POINTER;
+    }else{
+        strcpy(p_exception->description.p_first_char, description);
+        p_exception->fun_name.length = strlen(fun_name);
+        strcpy(p_exception->fun_name.p_first_char, fun_name);
+
+        return p_exception;
+    }
 }
 
 exc exc_add_and_throw(exc p_parent, int exception_id, const char* fun_name, const char* description){
     // create new exception
     exc_root* p_resulting_exception = exc_throw(exception_id, fun_name, description);
 
-    // link new exception to already existing exception
-    p_resulting_exception->p_parent = p_parent;
+    if (p_resulting_exception == EXC_NULL_POINTER){
+        return EXC_NULL_POINTER; // memory allocation failed
+    }else{
+        // link new exception to already existing exception
+        p_resulting_exception->p_parent = p_parent;
 
-    return p_resulting_exception;
+        return p_resulting_exception;
+    }
 }
 
 int exc_catch(const exc p_exception){
@@ -91,15 +118,19 @@ exc_root* exc_create_root(void){
     // allocate memory
     exc_root* p_exception = (exc_root*) malloc(sizeof(exc_root));
 
-    // initialize fields
-    p_exception->exception_id = EXC_NONE_ID;
-    p_exception->p_parent = EXC_NULL_POINTER;
-    p_exception->fun_name.length = 0;
-    p_exception->fun_name.p_first_char = EXC_NULL_POINTER;
-    p_exception->description.length = 0;
-    p_exception->description.p_first_char = EXC_NULL_POINTER;
+    if (p_exception == EXC_NULL_POINTER){
+        return EXC_NULL_POINTER; // memory allocation failed
+    }else{
+        // initialize fields
+        p_exception->exception_id = EXC_NONE_ID;
+        p_exception->p_parent = EXC_NULL_POINTER;
+        p_exception->fun_name.length = 0;
+        p_exception->fun_name.p_first_char = EXC_NULL_POINTER;
+        p_exception->description.length = 0;
+        p_exception->description.p_first_char = EXC_NULL_POINTER;
 
-    return p_exception;
+        return p_exception;
+    }
 }
 
 int exc_str_len(const exc_root* p_exception){
