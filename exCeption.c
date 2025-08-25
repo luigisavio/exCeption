@@ -59,7 +59,7 @@ char* exc_to_str(const exc p_exception){
         return EXC_NULL_POINTER; // memory allocation failed
     }else{
         // start by adding the introduction to exception
-        strcpy(p_char_to_return, STR_PART_ZERO);
+        memcpy(p_char_to_return, STR_PART_ZERO, STR_PART_ZERO_SIZE);
         // and then add the actual exception strings
         exc_add_own_str_to_str(p_exception, p_char_to_return + STR_PART_ZERO_SIZE);
 
@@ -78,16 +78,16 @@ exc exc_throw(int exception_id, const char* fun_name, const char* description){
     p_exception->exception_id = exception_id;
     p_exception->description.length = strlen(description);
     p_exception->description.p_first_char = (char*) malloc(p_exception->description.length+1);
+    p_exception->fun_name.length = strlen(fun_name);
     p_exception->fun_name.p_first_char = (char*) malloc(p_exception->fun_name.length+1);
 
     if ( (p_exception->description.p_first_char == EXC_NULL_POINTER) || (p_exception->fun_name.p_first_char == EXC_NULL_POINTER) ){
         // memory allocation failed, free everything and return null pointer
         exc_free(p_exception);
         return EXC_NULL_POINTER;
-    }else{
-        strcpy(p_exception->description.p_first_char, description);
-        p_exception->fun_name.length = strlen(fun_name);
-        strcpy(p_exception->fun_name.p_first_char, fun_name);
+    }else{ 
+        memcpy(p_exception->description.p_first_char, description, p_exception->description.length+1);
+        memcpy(p_exception->fun_name.p_first_char, fun_name, p_exception->fun_name.length+1);
 
         return p_exception;
     }
@@ -151,20 +151,20 @@ void exc_add_own_str_to_str(const exc_root* p_exception, char* p_first_char){
     // since strings are all known in size, use string copy instead of string cat. It is more efficient.
 
     int tempOffset = 0;
-    strcpy(p_first_char, STR_PART_ONE);
+    memcpy(p_first_char, STR_PART_ONE, STR_PART_ONE_SIZE);
     tempOffset = STR_PART_ONE_SIZE;
-    strcpy(p_first_char + tempOffset, p_exception->fun_name.p_first_char); // add function name string
+    memcpy(p_first_char + tempOffset, p_exception->fun_name.p_first_char, p_exception->fun_name.length); // add function name string
     tempOffset += p_exception->fun_name.length;
-    strcpy(p_first_char + tempOffset, STR_PART_TWO);
+    memcpy(p_first_char + tempOffset, STR_PART_TWO, STR_PART_TWO_SIZE);
     tempOffset += STR_PART_TWO_SIZE;
-    strcpy(p_first_char + tempOffset, p_exception->description.p_first_char); // add description string
+    memcpy(p_first_char + tempOffset, p_exception->description.p_first_char, p_exception->description.length); // add description string
     tempOffset += p_exception->description.length;
-    strcpy(p_first_char + tempOffset, STR_PART_THREE);
+    memcpy(p_first_char + tempOffset, STR_PART_THREE, STR_PART_THREE_SIZE);
     tempOffset += STR_PART_THREE_SIZE;
 
     if (p_exception->p_parent == EXC_NULL_POINTER) {
         // no parent exception, add terminator char and finish
-        strcpy(p_first_char + tempOffset, "");
+        *(p_first_char + tempOffset) = '\0';
         return;
     }else{
         // also add string of parent exception
