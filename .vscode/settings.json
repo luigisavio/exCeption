@@ -5,13 +5,5 @@
         "exception.h": "c",
         "stdio.h": "c",
         "string.h": "c"
-    },
-    "makefile.makefilePath": "",
-    "makefile.launchConfigurations": [
-        {
-            "cwd": "${workspaceFolder}/bin",
-            "binaryPath": "${workspaceFolder}/bin/final",
-            "binaryArgs": []
-        }
-    ]
+    }
 }

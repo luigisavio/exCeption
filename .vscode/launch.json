@@ -2,13 +2,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "my launch",
+            "name": "Build and launch (make+gdb)",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/bin/final",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
+            "cwd": "${fileDirname}",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
@@ -24,7 +24,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask":"buildWithMakefile"
+            "preLaunchTask": "buildWithMakefile"
         }
     ]
 }
