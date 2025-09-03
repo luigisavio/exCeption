@@ -7,7 +7,7 @@
 /* Structure to contain a string and its size. Used to write just one time the string size and avoid using strlen function multiple times*/
 typedef struct exc_string{
 
-    int length; // size of the string (number of bytes with the same meaning of strlen function)
+    long unsigned int length; // size of the string (number of bytes with the same meaning of strlen function)
     char* p_first_char; // actual string
 } exc_string;
 
@@ -50,7 +50,7 @@ int exc_catch(const exc p_exception);
 exc_root* exc_create_root(void);
 
 /* Returns the sum of the lengths of strings associated to an exception and all of its parents exceptions*/
-int exc_str_len(const exc_root* p_exception);
+long unsigned int exc_str_len(const exc_root* p_exception);
 
 /* Adds own strings to an already existing string */
 void exc_add_own_str_to_str(const exc_root* p_exception, char* p_first_char);

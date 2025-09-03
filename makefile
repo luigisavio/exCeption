@@ -1,4 +1,4 @@
-COMPILER_FLAGS = -g -pedantic-errors -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion -Werror
+COMPILER_FLAGS = -g -pedantic-errors -Wall -Wextra -Wconversion -Wsign-conversion -Werror
 
 build: bin/final # produces executable file for the whole application, if not already produced
 
