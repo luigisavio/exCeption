@@ -7,14 +7,16 @@
 
 /* Structure to contain a string and its size. Used to write just one time the string size and avoid using strlen 
 function multiple times*/
-typedef struct exc_string{
+typedef struct exc_string
+{
 
     long unsigned int length; // size of the string (number of bytes with the same meaning of strlen function)
     char* p_first_char; // actual string
 } exc_string;
 
 /*main exception structure*/
-typedef struct exc_root{
+typedef struct exc_root
+{
 
     int exception_id; // numerical identifier of the exception
 

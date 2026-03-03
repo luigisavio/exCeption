@@ -14,15 +14,18 @@ const long unsigned int STR_PART_THREE_SIZE = 2;
 
 /* # Public functions */
 
-void exc_free(exc p_exception){
-
-    if(p_exception == EXC_NULL_POINTER){
+void exc_free(exc p_exception)
+{
+    if(p_exception == EXC_NULL_POINTER)
+    {
         return; // nothing to free
     }
 
-    if (p_exception->p_parent == EXC_NULL_POINTER){
+    if (p_exception->p_parent == EXC_NULL_POINTER)
+    {
         // this exception has no child, no need to free childs
-    } else {
+    } else 
+    {
         exc_free(p_exception->p_parent); // free the parent of this exception
     }
     // free this exception. First free the strings, and only then the root
@@ -31,11 +34,12 @@ void exc_free(exc p_exception){
     free((void*) p_exception);
 }
 
-void exc_print(const exc p_exception){
-
+void exc_print(const exc p_exception)
+{
     // TODO receive pointer to function used to print, to be more flexible
 
-    if(p_exception == EXC_NULL_POINTER){
+    if(p_exception == EXC_NULL_POINTER)
+    {
         return; // nothing to free
     }
 
@@ -44,10 +48,11 @@ void exc_print(const exc p_exception){
     free(stringToPrint);
 }
 
-char* exc_to_str(const exc p_exception){
-
-    if(p_exception == EXC_NULL_POINTER){
-        return EXC_NULL_POINTER; // nothing to free
+char* exc_to_str(const exc p_exception)
+{
+    if(p_exception == EXC_NULL_POINTER)
+    {
+        return EXC_NULL_POINTER; // nothing to convert
     }
     
     // allocate memory for the strings. Allocated enough memory for the strings associated to this exception and all of 
@@ -55,9 +60,11 @@ char* exc_to_str(const exc p_exception){
     long unsigned int mem_to_allocate = STR_PART_ZERO_SIZE + exc_str_len(p_exception) + 1; // add 1 for terminator char
     char* p_char_to_return = (char*)malloc(mem_to_allocate);
 
-    if(p_char_to_return == EXC_NULL_POINTER){
+    if(p_char_to_return == EXC_NULL_POINTER)
+    {
         return EXC_NULL_POINTER; // memory allocation failed
-    }else{
+    }else
+    {
         // start by adding the introduction to exception
         memcpy(p_char_to_return, STR_PART_ZERO, STR_PART_ZERO_SIZE);
         // and then add the actual exception strings
@@ -69,8 +76,8 @@ char* exc_to_str(const exc p_exception){
 
     
 
-exc exc_throw(int exception_id, const char* fun_name, const char* description){
-
+exc exc_throw(int exception_id, const char* fun_name, const char* description)
+{
     // create new exception main structure
     exc_root* p_exception = exc_create_root();
 
@@ -82,11 +89,13 @@ exc exc_throw(int exception_id, const char* fun_name, const char* description){
     p_exception->fun_name.p_first_char = (char*) malloc(p_exception->fun_name.length+1);
 
     if ( (p_exception->description.p_first_char == EXC_NULL_POINTER) 
-        || (p_exception->fun_name.p_first_char == EXC_NULL_POINTER) ){
+    || (p_exception->fun_name.p_first_char == EXC_NULL_POINTER) )
+    {
         // memory allocation failed, free everything and return null pointer
         exc_free(p_exception);
         return EXC_NULL_POINTER;
-    }else{ 
+    }else
+    { 
         memcpy(p_exception->description.p_first_char, description, p_exception->description.length+1);
         memcpy(p_exception->fun_name.p_first_char, fun_name, p_exception->fun_name.length+1);
 
@@ -94,13 +103,16 @@ exc exc_throw(int exception_id, const char* fun_name, const char* description){
     }
 }
 
-exc exc_add_and_throw(exc p_parent, int exception_id, const char* fun_name, const char* description){
+exc exc_add_and_throw(exc p_parent, int exception_id, const char* fun_name, const char* description)
+{
     // create new exception
     exc_root* p_resulting_exception = exc_throw(exception_id, fun_name, description);
 
-    if (p_resulting_exception == EXC_NULL_POINTER){
+    if (p_resulting_exception == EXC_NULL_POINTER)
+    {
         return EXC_NULL_POINTER; // memory allocation failed
-    }else{
+    }else
+    {
         // link new exception to already existing exception
         p_resulting_exception->p_parent = p_parent;
 
@@ -108,20 +120,23 @@ exc exc_add_and_throw(exc p_parent, int exception_id, const char* fun_name, cons
     }
 }
 
-int exc_catch(const exc p_exception){
+int exc_catch(const exc p_exception)
+{
     return p_exception->exception_id;
 }
 
 /* # Private functions */
 
-exc_root* exc_create_root(void){
-
+exc_root* exc_create_root(void)
+{
     // allocate memory
     exc_root* p_exception = (exc_root*) malloc(sizeof(exc_root));
 
-    if (p_exception == EXC_NULL_POINTER){
+    if (p_exception == EXC_NULL_POINTER)
+    {
         return EXC_NULL_POINTER; // memory allocation failed
-    }else{
+    }else
+    {
         // initialize fields
         p_exception->exception_id = EXC_NONE_ID;
         p_exception->p_parent = EXC_NULL_POINTER;
@@ -134,8 +149,8 @@ exc_root* exc_create_root(void){
     }
 }
 
-long unsigned int exc_str_len(const exc_root* p_exception){
-
+long unsigned int exc_str_len(const exc_root* p_exception)
+{
     long unsigned int this_exc_str_len = 
     STR_PART_ONE_SIZE 
     + p_exception->fun_name.length 
@@ -143,17 +158,19 @@ long unsigned int exc_str_len(const exc_root* p_exception){
     + p_exception->description.length 
     + STR_PART_THREE_SIZE;
 
-    if (p_exception->p_parent == EXC_NULL_POINTER) {
+    if (p_exception->p_parent == EXC_NULL_POINTER) 
+    {
         // exception has no parent, return just the length of strings of this exception
         return this_exc_str_len;
-    }else{
+    }else
+    {
         // exception has parent, return this exception strings length plus the parent exception (recursive function)
         return (this_exc_str_len + exc_str_len(p_exception->p_parent));
     }
 }
 
-void exc_add_own_str_to_str(const exc_root* p_exception, char* p_first_char){
-
+void exc_add_own_str_to_str(const exc_root* p_exception, char* p_first_char)
+{
     // since strings are all known in size, use string copy instead of string cat. It is more efficient.
 
     long unsigned int tempOffset = 0;
@@ -170,11 +187,13 @@ void exc_add_own_str_to_str(const exc_root* p_exception, char* p_first_char){
     memcpy(p_first_char + tempOffset, STR_PART_THREE, STR_PART_THREE_SIZE);
     tempOffset += STR_PART_THREE_SIZE;
 
-    if (p_exception->p_parent == EXC_NULL_POINTER) {
+    if (p_exception->p_parent == EXC_NULL_POINTER) 
+    {
         // no parent exception, add terminator char and finish
         *(p_first_char + tempOffset) = '\0';
         return;
-    }else{
+    }else
+    {
         // also add string of parent exception
         exc_add_own_str_to_str(p_exception->p_parent, p_first_char + tempOffset);
     }
