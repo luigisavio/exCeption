@@ -36,8 +36,8 @@ exc averageOfNumbers(int a, int b, int* c)
     return EXC_NONE;
 }
 
-int main(void){
-    
+int main(void)
+{
     int c;
     exc exception = averageOfNumbers(-1, 1, &c); // this should generate the exception
 
