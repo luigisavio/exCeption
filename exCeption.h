@@ -1,10 +1,12 @@
 #ifndef EXCEPTION_HEADER
 #define EXCEPTION_HEADER
+
 #define EXC_NULL_POINTER ((void*)0) // no exception
 #define EXC_NONE EXC_NULL_POINTER
 #define EXC_NONE_ID 0
 
-/* Structure to contain a string and its size. Used to write just one time the string size and avoid using strlen function multiple times*/
+/* Structure to contain a string and its size. Used to write just one time the string size and avoid using strlen 
+function multiple times*/
 typedef struct exc_string{
 
     long unsigned int length; // size of the string (number of bytes with the same meaning of strlen function)
@@ -16,7 +18,8 @@ typedef struct exc_root{
 
     int exception_id; // numerical identifier of the exception
 
-    struct exc_root* p_parent; // pointer to parent exception. It is, if present, the exception that generated this exception. Otherwise it is null
+    struct exc_root* p_parent; // pointer to parent exception. It is, if present, the exception that generated this 
+                               // exception. Otherwise it is null
 
     exc_string fun_name; // string that contains function name that threw this exception
     exc_string description; // string that contains description of the exception: what happened?

@@ -1,8 +1,7 @@
 #include <string.h>
-// TODO check if all of these libraries are really needed
 #include <stdlib.h>
 #include <stdio.h>
-#include "exCeption.h" // "" so the preprocessor looks first in the directories relative to this project
+#include "exCeption.h"
 
 const char* STR_PART_ZERO = "An exception occurred, trace:\n";
 const long unsigned int STR_PART_ZERO_SIZE = 30;
@@ -11,7 +10,7 @@ const long unsigned int STR_PART_ONE_SIZE = 16;
 const char* STR_PART_TWO = "\': ";
 const long unsigned int STR_PART_TWO_SIZE = 3;
 const char* STR_PART_THREE = ".\n";
-const long unsigned int STR_PART_THREE_SIZE = 2; // TODO consider moving these global definitions somewhere else
+const long unsigned int STR_PART_THREE_SIZE = 2;
 
 /* # Public functions */
 
@@ -51,8 +50,9 @@ char* exc_to_str(const exc p_exception){
         return EXC_NULL_POINTER; // nothing to free
     }
     
-    // allocate memory for the strings. Allocated enough memory for the strings associated to this exception and all of its parents
-    long unsigned int mem_to_allocate = STR_PART_ZERO_SIZE + exc_str_len(p_exception) + 1; // add one for terminator char
+    // allocate memory for the strings. Allocated enough memory for the strings associated to this exception and all of 
+    // its parents
+    long unsigned int mem_to_allocate = STR_PART_ZERO_SIZE + exc_str_len(p_exception) + 1; // add 1 for terminator char
     char* p_char_to_return = (char*)malloc(mem_to_allocate);
 
     if(p_char_to_return == EXC_NULL_POINTER){
@@ -81,7 +81,8 @@ exc exc_throw(int exception_id, const char* fun_name, const char* description){
     p_exception->fun_name.length = strlen(fun_name);
     p_exception->fun_name.p_first_char = (char*) malloc(p_exception->fun_name.length+1);
 
-    if ( (p_exception->description.p_first_char == EXC_NULL_POINTER) || (p_exception->fun_name.p_first_char == EXC_NULL_POINTER) ){
+    if ( (p_exception->description.p_first_char == EXC_NULL_POINTER) 
+        || (p_exception->fun_name.p_first_char == EXC_NULL_POINTER) ){
         // memory allocation failed, free everything and return null pointer
         exc_free(p_exception);
         return EXC_NULL_POINTER;
@@ -135,7 +136,12 @@ exc_root* exc_create_root(void){
 
 long unsigned int exc_str_len(const exc_root* p_exception){
 
-    long unsigned int this_exc_str_len = STR_PART_ONE_SIZE + p_exception->fun_name.length + STR_PART_TWO_SIZE + p_exception->description.length + STR_PART_THREE_SIZE;
+    long unsigned int this_exc_str_len = 
+    STR_PART_ONE_SIZE 
+    + p_exception->fun_name.length 
+    + STR_PART_TWO_SIZE 
+    + p_exception->description.length 
+    + STR_PART_THREE_SIZE;
 
     if (p_exception->p_parent == EXC_NULL_POINTER) {
         // exception has no parent, return just the length of strings of this exception
@@ -153,11 +159,13 @@ void exc_add_own_str_to_str(const exc_root* p_exception, char* p_first_char){
     long unsigned int tempOffset = 0;
     memcpy(p_first_char, STR_PART_ONE, STR_PART_ONE_SIZE);
     tempOffset = STR_PART_ONE_SIZE;
-    memcpy(p_first_char + tempOffset, p_exception->fun_name.p_first_char, p_exception->fun_name.length); // add function name string
+    // add function name string
+    memcpy(p_first_char + tempOffset, p_exception->fun_name.p_first_char, p_exception->fun_name.length);
     tempOffset += p_exception->fun_name.length;
     memcpy(p_first_char + tempOffset, STR_PART_TWO, STR_PART_TWO_SIZE);
     tempOffset += STR_PART_TWO_SIZE;
-    memcpy(p_first_char + tempOffset, p_exception->description.p_first_char, p_exception->description.length); // add description string
+    // add description string
+    memcpy(p_first_char + tempOffset, p_exception->description.p_first_char, p_exception->description.length);
     tempOffset += p_exception->description.length;
     memcpy(p_first_char + tempOffset, STR_PART_THREE, STR_PART_THREE_SIZE);
     tempOffset += STR_PART_THREE_SIZE;
